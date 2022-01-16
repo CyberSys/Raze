@@ -37,6 +37,11 @@ BEGIN_DUKE_NS
 
 DDukeActor* spawninit_r(DDukeActor* actj, DDukeActor* act, TArray<DDukeActor*>* actors)
 {
+	if (act->GetClass() != RUNTIME_CLASS(DDukeActor))
+	{
+		CallOnSpawn(act);
+		return act;
+	}
 	auto sectp = act->sector();
 
 	switch (act->spr.picnum)
@@ -694,9 +699,6 @@ DDukeActor* spawninit_r(DDukeActor* actj, DDukeActor* act, TArray<DDukeActor*>* 
 		else
 			act->spr.xrepeat = act->spr.yrepeat = 32;
 		ChangeActorStat(act, STAT_MISC);
-		break;
-	case CRANE:
-		initcrane(actj, act, CRANEPOLE);
 		break;
 	case WATERDRIP:
 		initwaterdrip(actj, act);

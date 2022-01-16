@@ -105,6 +105,11 @@ public:
 
 	void Serialize(FSerializer& arc) override;
 
+
+	virtual void onSpawn() {}
+	virtual void Tick() {}
+	virtual void RunState() {}
+
 };
 
 // subclassed to add a game specific actor() method
@@ -331,7 +336,6 @@ struct player_struct
 	{
 		return cursector != nullptr;
 	}
-
 };
 
 struct Cycler

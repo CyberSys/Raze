@@ -119,5 +119,10 @@ struct Dispatcher
 
 extern Dispatcher fi;
 
+void CallOnSpawn(DDukeActor* actor);
+void CallTick(DDukeActor* actor);
+void CallAction(DDukeActor* actor);
+
+
 END_DUKE_NS
 

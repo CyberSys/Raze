@@ -841,12 +841,13 @@ void movestandables_r(void)
 			continue;
 		}
 
-		if (picnum >= CRANE && picnum <= CRANE +3)
+		if (act->GetClass() != RUNTIME_CLASS(DDukeActor))
 		{
-			movecrane(act, CRANE);
+			CallTick(act);
+			continue;
 		}
 
-		else if (picnum >= WATERFOUNTAIN && picnum <= WATERFOUNTAIN + 3)
+		if (picnum >= WATERFOUNTAIN && picnum <= WATERFOUNTAIN + 3)
 		{
 			movefountain(act, WATERFOUNTAIN);
 		}
@@ -3401,7 +3402,7 @@ void moveeffectors_r(void)   //STATNUM 3
 		{
 			static const int16_t list1[] = { BLOODPOOL, PUKE, FOOTPRINTS, FOOTPRINTS2, FOOTPRINTS3, -1 };
 			static const int16_t list2[] = { BOLT1, BOLT1 + 1,BOLT1 + 2, BOLT1 + 3, -1 };
-			handle_se24(act, list1, list2, st != 156, BULLETHOLE, -1, CRANE, 1);
+			handle_se24(act, list1, list2, st != 156, BULLETHOLE, -1, 1);
 			break;
 		}
 

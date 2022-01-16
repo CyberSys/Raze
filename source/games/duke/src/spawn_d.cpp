@@ -43,6 +43,11 @@ BEGIN_DUKE_NS
 
 DDukeActor* spawninit_d(DDukeActor* actj, DDukeActor* act, TArray<DDukeActor*>* actors)
 {
+	if (act->GetClass() != RUNTIME_CLASS(DDukeActor))
+	{
+		CallOnSpawn(act);
+		return act;
+	}
 	auto sectp = act->sector();
 
 	if (isWorldTour())
@@ -693,10 +698,6 @@ DDukeActor* spawninit_d(DDukeActor* actj, DDukeActor* act, TArray<DDukeActor*>* 
 		else act->spr.xrepeat = act->spr.yrepeat = 32;
 
 		ChangeActorStat(act, STAT_MISC);
-		break;
-
-	case CRANE:
-		initcrane(actj, act, CRANEPOLE);
 		break;
 
 	case WATERDRIP:

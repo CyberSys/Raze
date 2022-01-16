@@ -41,6 +41,7 @@ Modifications for JonoF's port by Jonathon Fowler (jf@jonof.id.au)
 #include "gamestate.h"
 #include "razefont.h"
 #include "psky.h"
+#include "vm.h"
 
 BEGIN_DUKE_NS
 
@@ -394,6 +395,58 @@ void GameInterface::app_init()
 	ud.last_level = -1;
 	enginecompatibility_mode = ENGINECOMPATIBILITY_19961112;//bVanilla;
 	S_ParseDeveloperCommentary();
+}
+
+
+DEFINE_ACTION_FUNCTION(DDukeActor, onSpawn)
+{
+	PARAM_SELF_PROLOGUE(DDukeActor);
+	self->onSpawn();
+	return 0;
+}
+
+DEFINE_ACTION_FUNCTION(DDukeActor, Tick)
+{
+	PARAM_SELF_PROLOGUE(DDukeActor);
+	self->Tick();
+	return 0;
+}
+
+DEFINE_ACTION_FUNCTION(DDukeActor, RunState)
+{
+	PARAM_SELF_PROLOGUE(DDukeActor);
+	self->RunState();
+	return 0;
+}
+
+void CallOnSpawn(DDukeActor* actor)
+{
+	IFVIRTUALPTR(actor, DDukeActor, onSpawn)
+	{
+		VMValue val = actor;
+		VMCall(func, &val, 1, nullptr, 0);
+	}
+	else actor->onSpawn();
+}
+
+void CallTick(DDukeActor* actor)
+{
+	IFVIRTUALPTR(actor, DDukeActor, Tick)
+	{
+		VMValue val = actor;
+		VMCall(func, &val, 1, nullptr, 0);
+	}
+	else actor->Tick();
+}
+
+void CallAction(DDukeActor* actor)
+{
+	IFVIRTUALPTR(actor, DDukeActor, RunState)
+	{
+		VMValue val = actor;
+		VMCall(func, &val, 1, nullptr, 0);
+	}
+	else actor->RunState();
 }
 
 END_DUKE_NS

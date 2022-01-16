@@ -263,3 +263,6 @@ enum gameaction_t : int
 	ga_fullconsole,
 };
 extern gameaction_t		gameaction;
+
+using SpawnMap = TMap<int, PClass*>;
+inline SpawnMap spawnMap;
