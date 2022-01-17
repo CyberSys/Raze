@@ -54,13 +54,13 @@ DDukeActor* EGS(sectortype* whatsectp, int s_x, int s_y, int s_z, int s_pn, int8
 	// sector pointer must be strictly validated here or the engine will crash.
 	if (whatsectp == nullptr || !validSectorIndex(sectnum(whatsectp))) return nullptr;
 
-	auto cls = spawnMap.CheckKey(s_pn);
-	auto act = static_cast<DDukeActor*>(InsertActor(cls ? *cls : RUNTIME_CLASS(DDukeActor), whatsectp, s_ss));
+	auto info = spawnMap.CheckKey(s_pn);
+	auto act = static_cast<DDukeActor*>(InsertActor(info ? info->Class() : RUNTIME_CLASS(DDukeActor), whatsectp, s_ss));
 
 	if (act == nullptr) return nullptr;
 	SetupGameVarsForActor(act);
 
-
+	act->basepicnum = info ? info->param : -1;
 	act->spr.pos.X = s_x;
 	act->spr.pos.Y = s_y;
 	act->spr.pos.Z = s_z;

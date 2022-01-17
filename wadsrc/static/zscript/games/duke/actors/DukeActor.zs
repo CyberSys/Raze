@@ -5,3 +5,12 @@ class DukeActor : CoreActor native
 	virtual native void RunState();	// this is the CON function.
 }
 
+class DukeCrane : DukeActor
+{
+	override native void onSpawn();
+	override native void Tick();
+}
+
+class DukeCranePole : DukeActor
+{
+}

@@ -2233,26 +2233,31 @@ static void parseSpawnClasses(FScanner& sc, FScriptPosition& pos)
 	int numframes = -1;
 	bool interpolate = false;
 
+	sc.SetCMode(true);
 	if (!sc.CheckString("{"))
 	{
 		pos.Message(MSG_ERROR, "spawnclasses:'{' expected, unable to continue");
+		sc.SetCMode(false);
 		return;
 	}
 	while (!sc.CheckString("}"))
 	{
-		sc.MustGetNumber(true);
+		int num = -1;
+		int base = -1;
+		FName cname;
+		sc.GetNumber(num, true);
 		sc.MustGetStringName("=");
 		sc.MustGetString();
-
-		auto cls = PClass::FindClass(sc.String);
-		if (!cls)
+		cname = sc.String;
+		if (sc.CheckString(","))
 		{
-			pos.Message(MSG_ERROR, "spawnclasses: unknown class '%s'", sc.String);
-			continue;
+			sc.GetNumber(base, true);
 		}
+
 		// todo: check for proper base class
-		spawnMap.Insert(sc.Number, cls);
+		spawnMap.Insert(num, { cname, nullptr, base });
 	}
+	sc.SetCMode(false);
 }
 
 //===========================================================================

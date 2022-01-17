@@ -36,7 +36,7 @@ public:
 	uint8_t cgg;
 	uint8_t spriteextra;	// moved here for easier maintenance. This was originally a hacked in field in the sprite structure called 'filler'.
 	short attackertype, ang, extra, movflag;
-	short tempang, dispicnum;
+	short tempang, dispicnum, basepicnum;
 	short timetosleep;
 	vec2_t ovel;
 	int floorz, ceilingz, aflags;
@@ -105,6 +105,15 @@ public:
 
 	void Serialize(FSerializer& arc) override;
 
+	void ChangeType(PClass* newtype)
+	{
+		if (newtype->IsDescendantOf(RUNTIME_CLASS(DDukeActor)) && newtype->Size == RUNTIME_CLASS(DDukeActor)->Size && GetClass()->Size == RUNTIME_CLASS(DDukeActor)->Size)
+		{
+			// It sucks having to do this but the game heavily depends on being able to swap out the class type and often uses this to manage actor state.
+			// We'll allow this only for classes that do not add their own data, though.
+			SetClass(newtype);
+		}
+	}
 
 	virtual void onSpawn() {}
 	virtual void Tick() {}

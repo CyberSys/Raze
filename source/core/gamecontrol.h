@@ -264,5 +264,18 @@ enum gameaction_t : int
 };
 extern gameaction_t		gameaction;
 
-using SpawnMap = TMap<int, PClass*>;
+struct SpawnRec
+{
+	FName clsname;
+	PClass* cls;
+	int param;
+
+	PClass* Class()
+	{
+		if (!cls && clsname != NAME_None) cls = PClass::FindClass(clsname);
+		clsname = NAME_None;
+		return cls;
+	}
+};
+using SpawnMap = TMap<int, SpawnRec>;
 inline SpawnMap spawnMap;

@@ -1,41 +1,14 @@
 BEGIN_DUKE_NS
 
-class DDukeCrane : public DDukeActor
-{
-public:
-	DECLARE_CLASS(DDukeCrane, DDukeActor)
-public:
-	int crane;	// first picnum.
-
-	void onSpawn() override;
-	void Tick() override;
-
-	void Serialize(FSerializer& arc) override // temporary workaround until this can use real textures
-	{
-		Super::Serialize(arc);
-		arc("cranepic", crane);
-	}
-};
-
-class DDukeCranePole : public DDukeActor
-{
-public:
-	DECLARE_CLASS(DDukeCranePole, DDukeActor)
-};
-
-IMPLEMENT_CLASS(DDukeCrane, false, false)
-IMPLEMENT_CLASS(DDukeCranePole, false, false)
-
-
 //---------------------------------------------------------------------------
 //
 // 
 //
 //---------------------------------------------------------------------------
 
-void initcrane(DDukeCrane* act)
+void initcrane(DDukeActor* act)
 {
-	act->crane = act->spr.picnum;
+	act->basepicnum = act->spr.picnum;
 	auto sect = act->sector();
 	act->spr.cstat |= CSTAT_SPRITE_BLOCK_ALL | CSTAT_SPRITE_ONE_SIDE;
 
@@ -50,7 +23,7 @@ void initcrane(DDukeCrane* act)
 	DukeStatIterator it(STAT_DEFAULT);
 	while (auto actk = it.Next())
 	{
-		if (act->spr.hitag == actk->spr.hitag && actk->IsKindOf(RUNTIME_CLASS(DDukeCranePole)))
+		if (act->spr.hitag == actk->spr.hitag && actk->IsKindOf("DukeCranePole"))
 		{
 			apt.poleactor = actk;
 
@@ -81,9 +54,9 @@ void initcrane(DDukeCrane* act)
 //
 //---------------------------------------------------------------------------
 
-void movecrane(DDukeCrane *actor)
+void movecrane(DDukeActor *actor)
 {
-	int crane = actor->crane;
+	int crane = actor->basepicnum;
 	auto sectp = actor->sector();
 	int x;
 	auto& cpt = cranes[actor->temp_data[4]];
@@ -264,14 +237,18 @@ void movecrane(DDukeCrane *actor)
 	}
 }
 
-void DDukeCrane::onSpawn()
+DEFINE_ACTION_FUNCTION(DDukeCrane, onSpawn)
 {
-	initcrane(this);
+	PARAM_SELF_PROLOGUE(DDukeActor);
+	initcrane(self);
+	return 0;
 }
 
-void DDukeCrane::Tick()
+DEFINE_ACTION_FUNCTION(DDukeCrane, Tick)
 {
-	movecrane(this);
+	PARAM_SELF_PROLOGUE(DDukeActor);
+	movecrane(self);
+	return 0;
 }
 
 END_DUKE_NS
